@@ -1,10 +1,3 @@
-
-// module.exports.getClient = function () {
-//     const { MongoClient } = require('mongodb');
-// const uri = "mongodb+srv://admin:N2NtlBbn9lnIap3I@cluster0.6fnyg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-// return new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-// }
-
 const mongoose = require("mongoose");
 require('dotenv').config()
 
