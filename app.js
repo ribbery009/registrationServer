@@ -1,5 +1,7 @@
 require("dotenv").config()
+const path = require('path')
 
+require('dotenv').config({ path: 'variables.env' })
 const User = require("./models/user_schema");
 const bcrypt = require("bcrypt");
 const express = require('express')
@@ -13,6 +15,8 @@ const auth = require("./middleware/auth");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey('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')
 
 dbConnect();
 
@@ -105,7 +109,35 @@ app.post("/register", async (req, res) => {
 
         user.save()
 
-        res.send(user);
+        const msg = {
+            to: 'ribbery009@sulid.hu', // Change to your recipient
+            from: 'ribbery009@sulid.hu', // Change to your verified sender
+            subject: 'Sending with SendGrid is Fun',
+            text: 'and easy to do anywhere, even with Node.js',
+            html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+          }
+
+        // const emailData = {
+        //     from: "jacksparowpiratetools@gmail.com",
+        //     to: req.body.email.toLowerCase(),
+        //     subject: `regisztráció`,
+        //     html: `
+        //         <h1>Sikeres regisztráció!</h1>
+        //         <p><a href="localhost:3000">Kérjük jelentkezzen be</p>
+        //         <hr />  
+        //     `
+        //   };
+
+
+          sgMail
+          .send(msg)
+          .then(sent => {
+            // console.log('SIGNUP EMAIL SENT', sent)
+            return res.json({
+              result: "success",
+              message: `E-mail eküldve erre a címre: ${req.body.email}.`
+            });
+        })
     } catch (err) {
         console.log(err)
         res.send({ error: "insert error" });
